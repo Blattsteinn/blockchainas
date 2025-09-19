@@ -8,13 +8,13 @@ def hash_function(_array_of_bytes):
         for i in range(int(len(_array_of_bits)/8)):
             bit_duo = []
 
-            temporary_sum: int = 0
+            temporary_sum: int = 1
             for j in range(8):
                 if j < 6:
                     if _array_of_bits[counter] == 0:
                         temporary_sum *= 67429**(j+1)
                     if _array_of_bits[counter] == 1:
-                        temporary_sum += 91997**(j+1)
+                        temporary_sum *= 91997**(j+1)
                 else:
                     bit_duo.append(_array_of_bits[counter])
 
