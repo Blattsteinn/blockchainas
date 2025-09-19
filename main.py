@@ -1,5 +1,6 @@
 
 def hash_function(_array_of_bytes):
+    MOD = 2 ** 256 - 189  # Large prime for reduction
     calculated_number: int = 1
     for _array_of_bits in _array_of_bytes:
         bit_duo = []
@@ -21,6 +22,7 @@ def hash_function(_array_of_bytes):
         if bit_duo == [1, 0]: temporary_sum *= 820249177872665494536846925429
 
         calculated_number *= temporary_sum
+        calculated_number %= MOD
 
     return calculated_number
 
@@ -39,11 +41,10 @@ if __name__ == "__main__":
             for bit in byte_form:
                 array_of_bits.append(int(bit))
             array_of_bytes.append(array_of_bits)
-        print(array_of_bytes)
+
 
 
         number_received = hash_function(array_of_bytes)
 
         hex_value = format(number_received, "x")
-        cut_value = hex_value[:64]
         print(hex_value)
