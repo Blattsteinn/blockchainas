@@ -21,6 +21,7 @@ def hash_function(_array_of_bytes):
         if bit_duo == [1, 1]: temporary_sum *= 233246422214829721422450466691
         if bit_duo == [1, 0]: temporary_sum *= 820249177872665494536846925429
 
+        temporary_sum %= MOD
         calculated_number *= temporary_sum
         calculated_number %= MOD
 
