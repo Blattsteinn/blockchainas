@@ -1,6 +1,11 @@
-def hash_function(_array_of_bits):
+large_string = """
+Choice:
+	1. user-input
+	2. read .txt file
 
-    modulo = 2 ** 256 - 189
+    """
+def hash_function(_array_of_bits):
+    modulo = 2 ** 256
     calculated_number: int = 1
 
     temporary_sum: int = 1
@@ -9,46 +14,68 @@ def hash_function(_array_of_bits):
 
     for i, _bit in enumerate(_array_of_bits):
 
-        if (i + 1) % 8 == 0:
-            calculated_number += temporary_sum
-            calculated_number %= modulo
-            bit_duo = []
-            temporary_sum = 1
-            temporary_index = 0
-
-
         if _array_of_bits[i] == 0:
-            temporary_sum *= 67429 ** (temporary_index+1) * 10
+            temporary_sum *= (67429 ** (temporary_index + (i // 8)))
         else:
-            temporary_sum *= 91997 ** (temporary_index+1) * 10
+            temporary_sum *= (91997 ** (temporary_index + 1 + (i // 8)))
 
         if i >= 6 and (i % 6 == 0 or i % 6 == 1):
             bit_duo.append(_array_of_bits[i])
 
-        if len(bit_duo) == 2:
-            if bit_duo == [0, 0]: temporary_sum *= 410079252992648349570025508981
-            if bit_duo == [0, 1]: temporary_sum *= 728730155706782142465312831289
-            if bit_duo == [1, 1]: temporary_sum *= 233246422214829721422450466691
-            if bit_duo == [1, 0]: temporary_sum *= 820249177872665494536846925429
 
-        temporary_sum %= modulo
+        if len(bit_duo) == 2:
+            if bit_duo == [0, 0]: temporary_sum *= 5938474430905413401767207523544980081
+            if bit_duo == [0, 1]: temporary_sum *= 2268752756812624175100564572640790511
+            if bit_duo == [1, 1]: temporary_sum *= 9808407823880205631311916183101774079
+            if bit_duo == [1, 0]: temporary_sum *= 8190922290267339622366176529252862003
+
+        #reset everything if we passed 8 bits
+        if (i + 1) % 8 == 0:
+            calculated_number *= temporary_sum
+            calculated_number = calculated_number  % modulo
+            bit_duo = []
+            temporary_sum = 1
+            temporary_index = 0
+        else:
+            temporary_sum %= modulo
+            temporary_index += 1
 
     return calculated_number
 
+def encode_word(word_):
+    encoded_text = word_.encode('utf-8')
+    for letter in encoded_text:
+        byte_form = format(letter, '08b')
+        for bit in byte_form:
+            array_of_bits.append(int(bit))
+
 if __name__ == "__main__":
+    array_of_bits = []
+    user_input: int
 
     while True:
-        word_to_hash = input("Enter the word you want to hash: ")
-        array_of_bits = []
+        user_input = int(input(large_string))
 
-        encoded_text = word_to_hash.encode('utf-8')
-        for letter in encoded_text:
-            byte_form = format(letter, '08b')
-            for bit in byte_form:
-                array_of_bits.append(int(bit))
+        if user_input == 1:
+            word_to_hash = input("Enter the word you want to hash: ")
+            encode_word(word_to_hash)
+            number_received = hash_function(array_of_bits)
+            hex_value = format(number_received, "064x")
+            print(f"Word: {word}, hash: {hex_value}")
 
-
-        number_received = hash_function(array_of_bits)
-
-        hex_value = format(number_received, "x")
-        print(hex_value)
+        elif user_input == 2:
+            file_name = input("Enter file name: ")
+            file_name += ".txt"
+            try:
+                with open(file_name, "r", encoding="utf-8") as f:
+                    for line in f:
+                        word = line.strip()
+                        if not word:
+                            continue
+                        array_of_bits.clear()
+                        encode_word(word)
+                        number_received = hash_function(array_of_bits)
+                        hex_value = format(number_received, "064x")
+                        print(f"Word: {word}, hash: {hex_value}")
+            except FileNotFoundError:
+                print(f"File '{file_name}' not found.")
