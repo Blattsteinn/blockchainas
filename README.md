@@ -35,3 +35,78 @@ The result then is converted to a 64-digit hexadecimal string:
 number = hash_function(array_of_bits)
 hex_value = format(number, "064x")
 ```
+# Testing
+
+## Efficiency measure
+
+
+| Test    | 1 row  | 2 rows | 4 rows | 8 rows | 16 rows |
+|---------|--------|--------|--------|--------|---------|
+| 1       | 2.1688 | 3.1713 | 6.2848 | 15.158 | 46.9324 |
+| 2       | 2.0810 | 3.1958 | 6.6905 | 13.3014| 47.0546 |
+| 3       | 2.0885 | 3.1468 | 5.9326 | 13.2324| 31.4662 |
+| 4       | 2.1176 | 3.2275 | 5.9186 | 13.1107| 30.2204 |
+| 5       | 2.1142 | 3.1930 | 5.8710 | 13.1466| 29.3681 |
+| **Average** | **2.11402** | **3.18688** | **6.1395** | **13.58982** | **37.00834** |
+
+This table shows how long it takes (in seconds) to hash different numbers of lines from the file `konstitucija.txt`.
+The columns represent how many lines are hashed at once (1, 2, 4, 8, 16).
+The rows represent repeated tests
+
+<img width="637" height="357" alt="image" src="https://github.com/user-attachments/assets/ba04a828-cb95-4275-8dd5-62456f6e5619" />
+
+## Collision measure
+Program choice 3
+
+File `random_strings_100k.txt` contains completely random strings (100 000 total):
+- 25k strings with 10 characters
+- 25k strings with 100 characters
+- 25k strings with 500 characters
+- 25k strings with 1000 characters
+
+When hashed (`random_strings_hashed_100k.txt`)and compared with each other, it appears that 411 of 100 000 are not unique hashes with 419 total duplicates.
+
+Code:
+```python
+            count: int = 0
+            seen = set()
+            duplicates = set()
+
+            for h in hashes:
+                if h in seen:
+                    count += 1
+                    duplicates.add(h)
+                else:
+                    seen.add(h)
+
+            print(f"Number of duplicate hashes: {len(duplicates)}")
+            print(f"Total duplicate occurrences: {count}")
+
+```
+## Avalanche effect
+Program choice 4 & 5
+
+Collision detection with extremely similar 100 000 strings
+
+Files used: 
+- `similar_strings_100k.txt` strings with size 16 characters
+-  `similar_strings_hashes_100k.txt` hashed strings
+
+Using same code as above we get the following results:
+- Number of duplicate hashes: 4668
+- Total duplicate occurrences: 4972
+
+
+### Comparing how much hashes differ to each on binary and hexadecimal level:
+
+
+Binary:
+- Min: 0.0 (there is an identical)
+- Max: 62.5
+- Average: 48.47
+
+Hexadecimal:
+- Min: 0.0
+- Max: 100.0
+- Average: 91.2190371903719
+
