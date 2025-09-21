@@ -5,6 +5,8 @@ Choice:
 	3. Collisions check
 	4. Bit comparison
 	5. Hexadecimal comparison
+	
+	6. Read from file and write hexadecimal to file
     """
 def hash_function(_array_of_bits):
     modulo = 2 ** 256
@@ -156,3 +158,26 @@ if __name__ == "__main__":
             print("Min:", min(difference_of_percentages))
             print("Max:", max(difference_of_percentages))
             print("Average:", percent_diff)
+
+        elif user_input == 6:
+            file_name = input("Enter file name: ")
+            file_name += ".txt"
+            file_name = "files/" + file_name
+
+            files_out = input("Enter file name to create: ")
+            files_out += ".txt"
+            files_out = "files/" + files_out
+
+            try:
+                with open(file_name, "r", encoding="utf-8") as f, open(files_out,"w", encoding="utf-8") as out:
+                    for line in f:
+                        word = line.strip()
+                        if not word:
+                            continue
+                        array_of_bits.clear()
+                        encode_word(word)
+                        number_received = hash_function(array_of_bits)
+                        hex_value = format(number_received, "064x")
+                        out.write(hex_value +'\n')
+            except FileNotFoundError:
+                print(f"File '{file_name}' not found.")
