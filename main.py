@@ -2,7 +2,9 @@ large_string = """
 Choice:
 	1. user-input
 	2. read .txt file
-
+	3. Collisions check
+	4. Bit comparison
+	5. Hexadecimal comparison
     """
 def hash_function(_array_of_bits):
     modulo = 2 ** 256
@@ -66,6 +68,7 @@ if __name__ == "__main__":
         elif user_input == 2:
             file_name = input("Enter file name: ")
             file_name += ".txt"
+            file_name = "files/" + file_name
             try:
                 with open(file_name, "r", encoding="utf-8") as f:
                     for line in f:
@@ -79,3 +82,77 @@ if __name__ == "__main__":
                         print(f"Word: {word[:20]}, hash: {hex_value}")
             except FileNotFoundError:
                 print(f"File '{file_name}' not found.")
+
+        elif user_input == 3:
+            hashes = []
+            with open("files/similar_strings_hashes_100k.txt", "r", encoding="utf-8") as f:
+                for idx,line in enumerate(f):
+                    hashes.append(line.strip())
+            count: int = 0
+            seen = set()
+            duplicates = set()
+
+            for h in hashes:
+                if h in seen:
+                    count += 1
+                    duplicates.add(h)
+                else:
+                    seen.add(h)
+
+            print(f"Number of duplicate hashes: {len(duplicates)}")
+            print(f"Total duplicate occurrences: {count}")
+
+        elif user_input == 4:
+            def hex_to_bin(hex_str):
+                return bin(int(hex_str, 16))[2:].zfill(len(hex_str) * 4)
+
+
+            hashes = []
+            with open("files/similar_strings_hashes_100k.txt", "r", encoding="utf-8") as f:
+                for line in f:
+                    hashes.append(line.strip())
+
+
+            difference_of_percentages = []
+
+            total: float = 0.0
+            different: int = 0
+            for i in range(len(hashes) - 1):
+                b1 = hex_to_bin(hashes[i])
+                b2 = hex_to_bin(hashes[i + 1])
+                different: int = 0
+                for bit1, bit2 in zip(b1, b2):
+                    if bit1 != bit2:
+                        different += 1
+
+                difference_of_percentages.append(different / len(b1)*100)
+            percent_diff = sum(difference_of_percentages) / len(difference_of_percentages)
+
+            print("Min:", min(difference_of_percentages))
+            print("Max:", max(difference_of_percentages))
+            print("Average:", percent_diff)
+
+        elif user_input == 5:
+
+            hashes = []
+            with open("files/similar_strings_hashes_100k.txt", "r", encoding="utf-8") as f:
+                for line in f:
+                    hashes.append(line.strip())
+
+
+            difference_of_percentages = []
+
+            total: float = 0.0
+            different: int = 0
+            for i in range(len(hashes) - 1):
+                different: int = 0
+                for character1, character2 in zip(hashes[i], hashes[i + 1]):
+                    if character1 != character2:
+                        different += 1
+
+                difference_of_percentages.append(different / 64 *100)
+            percent_diff = sum(difference_of_percentages) / len(difference_of_percentages)
+
+            print("Min:", min(difference_of_percentages))
+            print("Max:", max(difference_of_percentages))
+            print("Average:", percent_diff)
