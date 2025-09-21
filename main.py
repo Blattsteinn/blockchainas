@@ -22,8 +22,8 @@ def hash_function(_array_of_bits):
         if i >= 6 and (i % 6 == 0 or i % 6 == 1):
             bit_duo.append(_array_of_bits[i])
 
-
         if len(bit_duo) == 2:
+
             if bit_duo == [0, 0]: temporary_sum *= 5938474430905413401767207523544980081
             if bit_duo == [0, 1]: temporary_sum *= 2268752756812624175100564572640790511
             if bit_duo == [1, 1]: temporary_sum *= 9808407823880205631311916183101774079
@@ -61,7 +61,7 @@ if __name__ == "__main__":
             encode_word(word_to_hash)
             number_received = hash_function(array_of_bits)
             hex_value = format(number_received, "064x")
-            print(f"Word: {word}, hash: {hex_value}")
+            print(f"Word: {word_to_hash[:20]}, hash: {hex_value}")
 
         elif user_input == 2:
             file_name = input("Enter file name: ")
@@ -76,6 +76,6 @@ if __name__ == "__main__":
                         encode_word(word)
                         number_received = hash_function(array_of_bits)
                         hex_value = format(number_received, "064x")
-                        print(f"Word: {word}, hash: {hex_value}")
+                        print(f"Word: {word[:20]}, hash: {hex_value}")
             except FileNotFoundError:
                 print(f"File '{file_name}' not found.")
