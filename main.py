@@ -7,7 +7,12 @@ Choice:
 	5. Hexadecimal comparison
 	
 	6. Read from file and write hexadecimal to file
+	7. user-input + salt
     """
+
+import random
+
+
 def hash_function(_array_of_bits):
     modulo = 2 ** 256
     calculated_number: int = 1
@@ -36,12 +41,12 @@ def hash_function(_array_of_bits):
         #reset everything if we passed 8 bits
         if (i + 1) % 8 == 0:
             calculated_number *= temporary_sum
-            calculated_number = calculated_number  % modulo
+            calculated_number = calculated_number  % MODULO
             bit_duo = []
             temporary_sum = 1
             temporary_index = 0
         else:
-            temporary_sum %= modulo
+            temporary_sum %= MODULO
             temporary_index += 1
 
     return calculated_number
@@ -181,3 +186,16 @@ if __name__ == "__main__":
                         out.write(hex_value +'\n')
             except FileNotFoundError:
                 print(f"File '{file_name}' not found.")
+
+        elif user_input == 7:
+            word_to_hash = input("Enter the word you want to hash: ")
+
+            letters_array = ['a','b','c','d','e','f', 'g', 'h']
+            salt = ''.join(random.choice(letters_array) for _ in range(16))
+            print(f"Generated salt {salt}")
+
+            word_to_hash = salt + word_to_hash
+            encode_word(word_to_hash)
+            number_received = hash_function(array_of_bits)
+            hex_value = format(number_received, "064x")
+            print(f"Word: {word_to_hash[:20]}, hash: {hex_value}")
