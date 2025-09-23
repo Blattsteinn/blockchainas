@@ -75,8 +75,6 @@ hex_value = format(number, "064x")
 # Testing
 
 ## Efficiency measure
-
-
 | Test    | 1 row  | 2 rows | 4 rows | 8 rows | 16 rows |
 |---------|--------|--------|--------|--------|---------|
 | 1       | 2.1688 | 3.1713 | 6.2848 | 15.158 | 46.9324 |
@@ -93,57 +91,80 @@ The rows represent repeated tests
 <img width="637" height="357" alt="image" src="https://github.com/user-attachments/assets/ba04a828-cb95-4275-8dd5-62456f6e5619" />
 
 ## Collision measure
-Program choice 3
-
 File `random_strings_100k.txt` contains completely random strings (100 000 total):
 - 25k strings with 10 characters
 - 25k strings with 100 characters
 - 25k strings with 500 characters
 - 25k strings with 1000 characters
 
-When hashed (hashes in `random_strings_hashed_100k.txt`) and compared with each other, it appears that 411 of 100 000 are not unique hashes with 419 total duplicates.
+When hashed and compared with each other, it appears that 411 of 100 000 are not unique hashes with 419 total duplicates.
+| Number of Duplicate Hashes | Total Duplicate Occurrences |
+|----------------------------|-----------------------------|
+| 411                        | 419                         |
 
-Code:
-```python
-            count: int = 0
-            seen = set()
-            duplicates = set()
 
-            for h in hashes:
-                if h in seen:
-                    count += 1
-                    duplicates.add(h)
-                else:
-                    seen.add(h)
-
-            print(f"Number of duplicate hashes: {len(duplicates)}")
-            print(f"Total duplicate occurrences: {count}")
-
-```
 ## Avalanche effect
-Program choice 4 & 5
-
-Collision detection with extremely similar 100 000 strings
+Collision detection with extremely similar 100 000 strings.
 
 Files used: 
 - `similar_strings_100k.txt` strings with size 16 characters
 -  `similar_strings_hashes_100k.txt` hashed strings
 
-Using same code as above we get the following results:
-- Number of duplicate hashes: 4668
-- Total duplicate occurrences: 4972
+When doing collision check we get:
+| Number of Duplicate Hashes | Total Duplicate Occurrences |
+|----------------------------|-----------------------------|
+| 4668                       | 4972                        |
 
 
 ### Comparing how much hashes differ to each on binary and hexadecimal level:
+| Metric      | Min (%) | Max (%) | Average (%)   |
+|-------------|---------|---------|---------------|
+| Binary      | 0.0     | 62.5    | 48.47         |
+| Hexadecimal | 0.0     | 100.0   | 91.2190371904 |
 
 
-Binary:
-- Min: 0.0 (there is an identical)
-- Max: 62.5
-- Average: 48.47
 
-Hexadecimal:
-- Min: 0.0
-- Max: 100.0
-- Average: 91.2190371903719
+# Comparison with AI improved version
+## Efficiency measure
 
+| Test | 1 row  | 2 rows  | 4 rows  | 8 rows  | 16 rows  |
+|------|--------|---------|---------|---------|----------|
+| 1    | 0.7333 | 0.8948  | 1.0741  | 1.2306  | 1.3643   |
+| 2    | 0.7285 | 0.8568  | 1.0621  | 1.2114  | 1.3679   |
+| 3    | 0.7439 | 0.8441  | 1.0141  | 1.1946  | 1.4002   |
+| 4    | 0.7378 | 0.8598  | 1.0175  | 1.2431  | 1.3621   |
+| 5    | 0.7401 | 0.8498  | 1.0095  | 1.2232  | 1.3561   |
+| **Average** | 0.73672 | 0.86106 | 1.03546 | 1.22058 | 1.37012 |
+
+Average run-time compared to No-AI version is much better:
+| Version | 1 row  | 2 rows  | 4 rows  | 8 rows  | 16 rows  |
+|---------|--------|---------|---------|---------|----------|
+| No-AI   | 2.11   | 3.19    | 6.14    | 13.59   | 37.01    |
+| AI      | 0.74   | 0.86    | 1.04    | 1.22    | 1.37     |
+
+
+## Collision measure
+When using using 100 000 random strings we get that all the hashes are unique:
+
+| Version     | Number of Duplicate Hashes | Total Duplicate Occurrences |
+|-------------|----------------------------|-----------------------------|
+| No-AI       | 411                        | 419                         |
+| AI Improved | 0                          | 0                           |
+
+
+When using using 100 000 random strings that are extremely similar we get:
+|  Version   | Number of Duplicate Hashes | Total Duplicate Occurrences |
+|------------|----------------------------|-----------------------------|
+| No-AI      | 4668                       | 4972                        |
+| AI Improved| 1947                       | 1994                        |
+
+
+## Avalanche effect
+When comparing how much hashes differ to each on binary and hexadecimal level, we get that results are somewhat similar compared to No-AI version
+
+| Version | Metric      | Min (%) | Max (%) | Average (%) |
+|---------|-------------|---------|---------|-------------|
+| AI      | Bit         | 0.0     | 64.45   | 49.03       |
+| No-AI   | Binary      | 0.0     | 62.5    | 48.47       |
+| AI      | Hexadecimal | 0.0     | 100.0   | 91.98       |
+| No-AI   | Hexadecimal | 0.0     | 100.0   | 91.22       |
