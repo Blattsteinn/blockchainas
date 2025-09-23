@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
         elif user_input == 3:
             hashes = []
-            with open("files/random_strings_hashed_100k.txt", "r", encoding="utf-8") as f:
+            with open("files/hashes_similar.txt", "r", encoding="utf-8") as f:
                 for idx,line in enumerate(f):
                     hashes.append(line.strip())
             count: int = 0
@@ -116,7 +116,7 @@ if __name__ == "__main__":
 
 
             hashes = []
-            with open("files/similar_strings_hashed_100k.txt", "r", encoding="utf-8") as f:
+            with open("files/hashes_similar.txt", "r", encoding="utf-8") as f:
                 for line in f:
                     hashes.append(line.strip())
 
@@ -143,7 +143,7 @@ if __name__ == "__main__":
         elif user_input == 5:
 
             hashes = []
-            with open("files/similar_strings_hashed_100k.txt", "r", encoding="utf-8") as f:
+            with open("files/hashes_similar.txt", "r", encoding="utf-8") as f:
                 for line in f:
                     hashes.append(line.strip())
 

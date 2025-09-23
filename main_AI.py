@@ -48,9 +48,9 @@ def hash_function(_array_of_bits):
             elif bit_duo == [1, 0]:
                 calculated_number ^= 8190922290267339622366176529252862003
             calculated_number %= MODULO
-            bit_duo = []  # reset immediately
+            bit_duo = []
 
-        # Every 8 bits → apply stronger mixing
+        # Every 8 bits mix
         if (i + 1) % 8 == 0:
             calculated_number = (calculated_number * PRIME_2 + PRIME_1) % MODULO
             # Small rotation
@@ -104,7 +104,7 @@ if __name__ == "__main__":
             hashes = []
             file_name = input("Enter file name: ")
             try:
-                with open("files" + file_name + "txt", "r", encoding="utf-8") as f:
+                with open("files/" + file_name + ".txt", "r", encoding="utf-8") as f:
                     for idx,line in enumerate(f):
                         hashes.append(line.strip())
                 count: int = 0
@@ -131,7 +131,7 @@ if __name__ == "__main__":
             hashes = []
             file_name = input("Enter file name (hashes): ")
             try:
-                with open("files" + file_name + "txt", "r", encoding="utf-8") as f:
+                with open("files/" + file_name + ".txt", "r", encoding="utf-8") as f:
                     for line in f:
                         hashes.append(line.strip())
 
@@ -163,7 +163,7 @@ if __name__ == "__main__":
 
             file_name = input("Enter file name (hashes): ")
             try:
-                with open("files" + file_name + "txt", "r", encoding="utf-8") as f:
+                with open("files/" + file_name + ".txt", "r", encoding="utf-8") as f:
                     for line in f:
                         hashes.append(line.strip())
 
