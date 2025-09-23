@@ -8,10 +8,11 @@ Choice:
 	
 	6. Read from file and write hexadecimal to file
 	7. user-input + salt
+	8. Konstitucijos testavimas
     """
 
 import random
-
+import time
 
 def hash_function(_array_of_bits):
     modulo = 2 ** 256
@@ -41,12 +42,12 @@ def hash_function(_array_of_bits):
         #reset everything if we passed 8 bits
         if (i + 1) % 8 == 0:
             calculated_number *= temporary_sum
-            calculated_number = calculated_number  % MODULO
+            calculated_number = calculated_number  % modulo
             bit_duo = []
             temporary_sum = 1
             temporary_index = 0
         else:
-            temporary_sum %= MODULO
+            temporary_sum %= modulo
             temporary_index += 1
 
     return calculated_number
@@ -199,3 +200,34 @@ if __name__ == "__main__":
             number_received = hash_function(array_of_bits)
             hex_value = format(number_received, "064x")
             print(f"Word: {word_to_hash[:20]}, hash: {hex_value}")
+
+        elif user_input == 8:
+            try:
+                with open("files/konstitucija.txt", "r", encoding="utf-8") as f:
+                    lines_to_hash = [line.strip() for line in f if line.strip()]
+            except FileNotFoundError:
+                print("File 'konstitucija.txt' not found.")
+                continue
+
+            num_lines = 1
+            while num_lines <= 16:  # or any max block size you want
+                start_time = time.perf_counter()
+
+                # Process all consecutive blocks of size num_lines
+                for i in range(0, len(lines_to_hash), num_lines):
+                    block = lines_to_hash[i:i + num_lines]
+                    combined_string = "".join(block)
+
+                    array_of_bits.clear()
+                    encode_word(combined_string)
+
+                    number_received = hash_function(array_of_bits)
+                    hex_value = format(number_received, "064x")
+
+
+                end_time = time.perf_counter()
+                elapsed_time = (end_time - start_time) * 1000
+
+                print(f"Time to hash all {num_lines}-line blocks: {elapsed_time:.4f} ms\n")
+
+                num_lines *= 2
