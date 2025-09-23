@@ -9,7 +9,44 @@ The input can be:
 1. A single word entered by the user.  
 2. A `.txt` file with words, one per line.  
 
-## Hashing process logic 
+## Hashing process pseudo-code
+```python
+    modulo = 2 ** 256
+    calculated_number: int = 1
+
+    temporary_sum: int = 1
+    temporary_index: int = 0
+    bit_duo = []
+
+    for i, _bit in enumerate(_array_of_bits):
+
+        if _array_of_bits[i] == 0:
+            temporary_sum *= (67429 ** (temporary_index + (i // 8)))
+        else:
+            temporary_sum *= (91997 ** (temporary_index + 1 + (i // 8)))
+
+        if i >= 6 and (i % 6 == 0 or i % 6 == 1):
+            bit_duo.append(_array_of_bits[i])
+
+        if len(bit_duo) == 2:
+
+            if bit_duo == [0, 0]: temporary_sum *= 5938474430905413401767207523544980081
+            if bit_duo == [0, 1]: temporary_sum *= 2268752756812624175100564572640790511
+            if bit_duo == [1, 1]: temporary_sum *= 9808407823880205631311916183101774079
+            if bit_duo == [1, 0]: temporary_sum *= 8190922290267339622366176529252862003
+
+        #reset everything if we passed 8 bits
+        if (i + 1) % 8 == 0:
+            calculated_number *= temporary_sum
+            calculated_number = calculated_number  % modulo
+            bit_duo = []
+            temporary_sum = 1
+            temporary_index = 0
+        else:
+            temporary_sum %= modulo
+            temporary_index += 1
+
+```
 1. We pass an `array_of_bytes[]` into the `hash_function()`.
 2. For every 8 bits of  `array_of_bits[]`, a temporary variables `temporary_sum = 1` & `temporary_index = 1` is created to.
 
@@ -64,7 +101,7 @@ File `random_strings_100k.txt` contains completely random strings (100 000 total
 - 25k strings with 500 characters
 - 25k strings with 1000 characters
 
-When hashed (`random_strings_hashed_100k.txt`)and compared with each other, it appears that 411 of 100 000 are not unique hashes with 419 total duplicates.
+When hashed (hashes in `random_strings_hashed_100k.txt`) and compared with each other, it appears that 411 of 100 000 are not unique hashes with 419 total duplicates.
 
 Code:
 ```python
